@@ -29,8 +29,8 @@ One of my goals is to attempt the creation of a good kernel debugger and access 
 ## Where are devices mapped / originated in the kernel
 - The DeviceTree is a (serialized) dictionary of devices with properties including base addresses of hardware and registers.  
 - XNU uses the devicetree to map hardware into the kernel so that it can be accessed.  
-- In early stages, XNU uses `ml_io_map` to map hardware (physical) memory into the kernel.  
-- Later XNU will use IOMemoryDescriptor and IOMemoryMap from IOKit to translate, map and access memory.  \
+- In early stages, XNU uses ```ml_io_map(...)``` to map hardware (physical) memory into the kernel.  
+- Later XNU will use ```IOMemoryDescriptor(...)``` and ```IOMemoryMap(...)``` from IOKit to translate, map and access memory.  \
 - For translation of physical and virtual addresses, XNU has helper functions: ptovirtk and virtktop.
 - Instead of using these, one can translate addresses directly via the MMU too, by jumping to the matching ARMv8 system instructions.  
 - Most base addresses of devices can be found in the sourcecode of XNU or iBoot, such as: GPIO, VROM, SRAM and UART.  
@@ -49,7 +49,7 @@ One of my goals is to attempt the creation of a good kernel debugger and access 
 ## Video Console
 - XNU has a full VT100 on-display terminal integrated which even exits on production devices.  
 - There exist patchable flags to enable this console. (WIP).
-- There are functions for painting graphics: ```C vc_(...)``` and ```C gc_(...)```.  
+- There are functions for painting graphics: ```vc_(...)``` and ```gc_(...)```.  
 - The video console seems to fall back to serial when the display is not available.  
 - The console gets the screen properties from the device tree.  
 
@@ -57,10 +57,10 @@ One of my goals is to attempt the creation of a good kernel debugger and access 
 - If the serial console works and the serial keyboard is enabled, it perhaps may be possible to create a debug console.  
 - XNU in production leaves out some debugging features, but many of them still exist and can be enabled or patched in a chain.  
 - ml_dbgwrap functions are amazing for debugging, but do require some patches and chaining to work in most cases.  
-- ml_dbgwrap_halt_cpu_with_state can halt the CPU for any nanoseconds and restore the execution to a given threadstate (struct of registers) when the timer runs out.  
+- ```ml_dbgwrap_halt_cpu_with_state(...)``` can halt the CPU for any nanoseconds and restore the execution to a given threadstate (struct of registers) when the timer runs out.  
 - It may be possible to perhaps disable pagefaulting.  
 - It may be possible to perhaps bind execution to a specific CPU core and make a debugger on top of the serial console.  
-- ```C ml_dbgwrap_halt_cpu_with_state()``` checks if halt is supported on the CPU core, which is not the case on production devices. We can patch the ```C cpu_datap()``` structure to enable halt.  
+- ```ml_dbgwrap_halt_cpu_with_state(...)``` checks if halt is supported on the CPU core, which is not the case on production devices. We can patch the ```cpu_datap()``` structure to enable halt.  
 - Can we access syscfg partition and turn the device into a PVT (prototype) stage device and possibly unlock the possibility for debug kernels and boot.  
 
 ## Mac policies and CSR

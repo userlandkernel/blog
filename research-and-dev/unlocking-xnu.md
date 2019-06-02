@@ -49,7 +49,7 @@ One of my goals is to attempt the creation of a good kernel debugger and access 
 ## Video Console
 - XNU has a full VT100 on-display terminal integrated which even exits on production devices.  
 - There exist patchable flags to enable this console. (WIP).
-- There are functions for painting graphics: vc_(...) and gc_(...).  
+- There are functions for painting graphics: ```C vc_(...)``` and ```C gc_(...)```.  
 - The video console seems to fall back to serial when the display is not available.  
 - The console gets the screen properties from the device tree.  
 
@@ -60,14 +60,14 @@ One of my goals is to attempt the creation of a good kernel debugger and access 
 - ml_dbgwrap_halt_cpu_with_state can halt the CPU for any nanoseconds and restore the execution to a given threadstate (struct of registers) when the timer runs out.  
 - It may be possible to perhaps disable pagefaulting.  
 - It may be possible to perhaps bind execution to a specific CPU core and make a debugger on top of the serial console.  
-- ml_dbgwrap_halt_cpu_with_state checks if halt is supported on the CPU core, which is not the case on production devices. We can patch the cpu_datap() structure to enable halt.  
+- ```C ml_dbgwrap_halt_cpu_with_state()``` checks if halt is supported on the CPU core, which is not the case on production devices. We can patch the ```C cpu_datap()``` structure to enable halt.  
 - Can we access syscfg partition and turn the device into a PVT (prototype) stage device and possibly unlock the possibility for debug kernels and boot.  
 
 ## Mac policies and CSR
 - CSR is what Apple calls rootless and what is generally more known as SIP (System Integrity Protection).  
 - SIP does exist in XNU on iOS, but many have not noticed. For example one can see that creating /AppleInternal is prohibited by CSR and will fail.  
 - A bypass renaming another vnode to /AppleInternal is not enough, I tried this but the directory does not change on the actual filesystem eventhough the vnode gets created.  
-- Any mac policy on the system can be patched and thus enabled or disabled, but patching vnode_enforce still does not allow the creation of /AppleInternal.  
+- Any mac policy on the system can be patched and thus enabled or disabled, but patching vnode_enforce still does not allow the creation of ```/AppleInternal```.  
 - CSR operates on flags, which may mean that it is possible to disable it by patching that flags.  
 
 ## Sysctls
